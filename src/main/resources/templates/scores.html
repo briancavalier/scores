@@ -15,12 +15,16 @@
 
       stomp.connect('guest', 'guest', function(frame) {
         console.log('Connected to scores server');
-        stomp.subscribe("/app/scores", handleScores); // get the initial set of games/scores
-        stomp.subscribe("/topic/scores", handleScores); // subscribe to periodic updates
+        stomp.subscribe("/app/scores", initialScores); // get the initial set of games/scores
+        stomp.subscribe("/topic/scores", updateScores); // subscribe to periodic updates
       });
       
-      function handleScores(scores) {
-        console.log('Received: ', scores);
+      function initialScores(message) {
+    	  console.log("Received initial scores: ", message);
+      }
+      
+      function updateScores(message) {
+        console.log('Received update to scores: ', message);
       }
       
       function handleErrors(error) {
