@@ -1,7 +1,11 @@
 package scores;
 
-public class Game {
+import java.io.Serializable;
 
+public class Game implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private final String homeTeam;
 	private final String awayTeam;
 	private int homeTeamScore = 0;
