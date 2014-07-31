@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Home</title>
+    <script th:src="@{/webjars/sockjs-client/0.3.4/sockjs.min.js}"></script>
+    <script th:src="@{/webjars/stomp-websocket/2.3.0/stomp.min.js}"></script>
+    <script th:src="@{/webjars/jquery/2.0.3/jquery.min.js}"></script>
+  </head>
+  <body>
+
+	<h2>Gameday Scores</h2>
+
+    <script th:inline="javascript">
+      var sock = new SockJS([[@{/scores}]]);
+      var stomp = Stomp.over(sock);
+
+      stomp.connect('guest', 'guest', function(frame) {
+        console.log('Connected to scores server');
+        stomp.subscribe("/app/scores", handleScores); // get the initial set of games/scores
+        stomp.subscribe("/topic/scores", handleScores); // subscribe to periodic updates
+      });
+      
+      function handleScores(scores) {
+        console.log('Received: ', scores);
+      }
+      
+      function handleErrors(error) {
+        console.log('Error: ', error);
+      }
+      </script>
+    
+    <div id="output"></div>
+  </body>
+</html>

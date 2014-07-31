@@ -31,7 +31,13 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-websocket")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.springframework:spring-messaging")
     testCompile("org.springframework.boot:spring-boot-starter-test")
+
+    compile("org.webjars:jquery:2.0.3-1")
+    compile("org.webjars:sockjs-client:0.3.4")
+    compile("org.webjars:stomp-websocket:2.3.0")
+    
 }
 
 eclipse {
