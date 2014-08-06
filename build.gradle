@@ -34,6 +34,9 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
 	compile("org.springframework:spring-patch:0.5.0.BUILD-SNAPSHOT")
     compile("org.springframework:spring-messaging")
+    
+    compile("org.aspectj:aspectjweaver:1.8.1")
+    
     testCompile("org.springframework.boot:spring-boot-starter-test")
 
     compile("org.webjars:jquery:2.0.3-1")

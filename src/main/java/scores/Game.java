@@ -6,6 +6,8 @@ public class Game implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
+	private Long id = null;
+	
 	private final String homeTeam;
 	private final String awayTeam;
 	private int homeTeamScore = 0;
@@ -14,6 +16,14 @@ public class Game implements Serializable {
 	public Game(String homeTeam, String awayTeam) {
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public Long getId() {
+		return id;
 	}
 
 	public String getHomeTeam() {
