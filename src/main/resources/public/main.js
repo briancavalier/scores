@@ -6,8 +6,7 @@ var SockJS = require('sockjs-client');
 module.exports = fab.run(document.querySelector('.scoreboard'), gameDayView);
 
 function gameDayView(node, context) {
-	var sock = new SockJS('/scores');
-	var stomp = Stomp.over(sock);
+	var stomp = Stomp.over(new SockJS('/scores'));
 
 	stomp.connect('guest', 'guest', function() {
 		stomp.subscribe("/app/scores", initialScores);

@@ -28,7 +28,7 @@
 		"tests"
 	],
 	"dependencies": {
-		"rave": "~0.2.0",
+		"rave": "~0.3",
 		"fabulous": "briancavalier/fabulous",
 		"sockjs-client": "bower-sockjs-client#~0.3.4",
 		"stomp-websocket": "~2.3.3"
