@@ -1,0 +1,28 @@
+{
+  "name": "scores",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "rave": {
+    "missing": {
+      "stompjs": {
+        "browser": "lib/stomp.min.js"
+      }
+    }
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "jiff": "^0.6.0",
+    "most": "^0.8.0",
+    "rave": "^0.4.3",
+    "rave-load-css": "^0.5.1",
+    "rave-load-jsx": "^0.4.0",
+    "rave-node-process": "^0.2.0",
+    "react": "^0.11.2",
+    "stompjs": "^2.3.3"
+  }
+}
