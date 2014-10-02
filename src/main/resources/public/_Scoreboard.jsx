@@ -1,15 +1,14 @@
 var React = require('react');
 var jiff = require('jiff');
 
-require('./main.css');
-
 module.exports = React.createClass({
 	getInitialState: function() {
 		return { scores: [] };
 	},
 	componentDidMount: function() {
 		// TODO: Would be nice if the patching could be done externally
-		// and this component just received score arrays that react could
+		// and this component just received score arrays on which react
+		// could synchronize the DOM
 		var self = this;
 		this.props.updates.observe(function(patch) {
 			self.setState({ scores: jiff.patch(patch, self.state.scores) });

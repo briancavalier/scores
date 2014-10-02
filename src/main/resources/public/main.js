@@ -2,6 +2,8 @@ var most = require('most');
 var React = require('react');
 var Stomp = require('stompjs').Stomp;
 
+require('./main.css');
+
 var Scoreboard = require('./Scoreboard.jsx');
 var streamFromStomp = require('./streamFromStomp');
 
