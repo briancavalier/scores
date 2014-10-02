@@ -6,17 +6,16 @@ module.exports = React.createClass({
 		return { scores: [] };
 	},
 	componentDidMount: function() {
-		// TODO: Would be nice if the patching could be done externally
-		// and this component just received score arrays on which react
-		// could synchronize the DOM
+		// Observe the scores signal, which always represents the
+		// latest set of scores.
 		var self = this;
-		this.props.updates.observe(function(patch) {
-			self.setState({ scores: jiff.patch(patch, self.state.scores) });
+		this.props.scores.observe(function(scores) {
+			self.setState({ scores: scores });
 		});
 	},
 	render: function() {
 		var scores = this.state.scores.map(function(game) {
-			return <li className="game">
+			return <li key={game.id} className="game">
 						<div className="home">
 							<span className="name">{game.homeTeam}</span>
 							<span className="score">{game.homeTeamScore}</span>

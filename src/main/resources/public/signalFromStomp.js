@@ -1,4 +1,5 @@
 var most = require('most');
+var jiff = require('jiff');
 
 module.exports = function streamFromStomp(initDestination, updateDestination, stomp) {
 
@@ -19,32 +20,22 @@ module.exports = function streamFromStomp(initDestination, updateDestination, st
 			// of the full data, transformed into a replace-whole-document
 			// so that consumers of the outer stream (returned above)
 			// get a homogeneous stream of patches.
-			var initial = most.create(function(add, end) {
-				var subscription = stomp.subscribe(initDestination, function(msg) {
-					add([{ op: "replace", path: "", value: JSON.parse(msg.body) }]);
-					end();
+			var signal = fromStompJson(initDestination, stomp)
+				.take(1)
+				.flatMap(function(data) {
+					return fromStompJson(updateDestination, stomp)
+						.startWith([])
+						.scan(function(data, patch) {
+							return jiff.patch(patch, data);
+						}, data)
 				});
 
-				// Return a dispose function to call when this stream ends;
-				return subscription.unsubscribe.bind(subscription);
-			});
+			add(signal);
 
-			// Create a stream containing all the update patches.  This one
-			// is easy since the channel already contains JSON Patch.
-			var updates = most.create(function(add) {
-				var subscription = stomp.subscribe(updateDestination, function(msg) {
-					add(JSON.parse(msg.body));
-				});
-
-				// Return a dispose function to call when this stream ends;
-				return subscription.unsubscribe.bind(subscription);
-			});
-
-			// We're creating a higher-order stream here.
+			// We're creating a higher-order stream.
 			// The outer stream contains one event: an inner stream of patches
 			// We use join() below to flatten the higher-order stream to
 			// a first-order stream of patches.
-			add(initial.concat(updates));
 		});
 
 		// Return a dispose function for the outer stream;
@@ -52,3 +43,13 @@ module.exports = function streamFromStomp(initDestination, updateDestination, st
 
 	}).join();
 };
+
+function fromStompJson(destination, stomp) {
+	return most.create(function(add) {
+		var sub = stomp.subscribe(destination, function(msg) {
+			add(JSON.parse(msg.body));
+		});
+
+		return sub.unsubscribe.bind(sub);
+	});
+}

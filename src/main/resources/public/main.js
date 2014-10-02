@@ -5,16 +5,16 @@ var Stomp = require('stompjs').Stomp;
 require('./main.css');
 
 var Scoreboard = require('./Scoreboard.jsx');
-var streamFromStomp = require('./streamFromStomp');
+var signalFromStomp = require('./signalFromStomp');
 
 exports.main = function() {
 	var node = document.querySelector('.scoreboard');
 	var stomp = Stomp.over(new WebSocket('ws://localhost:8080/scores'));
 
-	// Get a stream of JSON Patch updates over stomp
-	var updates = streamFromStomp('/app/scores', 'topic/scores', stomp);
+	// Get a signal representing the "latest set of scores" over stomp
+	var scores = signalFromStomp('/app/scores', '/topic/scores', stomp);
 
-	// Create a Scoreboard, passing it a stream of updates
-	React.renderComponent(new Scoreboard({ updates: updates }), node);
+	// Create a Scoreboard, passing it the scores signal
+	React.renderComponent(new Scoreboard({ scores: scores }), node);
 };
 

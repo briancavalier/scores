@@ -17,7 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "jiff": "^0.6.0",
-    "most": "^0.8.0",
+    "most": "^0.8.2",
     "rave": "^0.4.3",
     "rave-load-css": "^0.5.1",
     "rave-load-jsx": "^0.4.0",
