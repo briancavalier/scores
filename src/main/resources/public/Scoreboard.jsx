@@ -1,5 +1,4 @@
 var React = require('react');
-var jiff = require('jiff');
 
 module.exports = React.createClass({
 	getInitialState: function() {
