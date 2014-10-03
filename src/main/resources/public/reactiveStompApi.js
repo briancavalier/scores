@@ -30,9 +30,7 @@ function signalFromChannels(initDestination, updateDestination, client) {
 		.flatMap(function(data) {
 			return fromStompJson(updateDestination, client)
 				.startWith([])
-				.scan(function(data, patch) {
-					return jiff.patch(patch, data);
-				}, data);
+				.scan(updateWithJsonPatch, data);
 		});
 }
 
@@ -42,6 +40,12 @@ function fromStompJson(destination, stomp) {
 			add(JSON.parse(msg.body));
 		});
 
+		// Return a dispose function to unsubscribe when all
+		// consumers lose interest
 		return sub.unsubscribe.bind(sub);
 	});
+}
+
+function updateWithJsonPatch(data, patch) {
+	return jiff.patch(patch, data);
 }
