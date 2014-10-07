@@ -8,13 +8,18 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.patch.jsonpatch.JsonDiff;
+import org.springframework.patch.Diff;
+import org.springframework.patch.Patch;
+import org.springframework.patch.json.JsonPatchMaker;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 @Aspect
 @Component
 public class UpdatePublicationAspect {
+
+	// TODO: Reconsider this aspect. Instead have GameDayService publish a score update via Reactor.
+	//       Rework this aspect into a handler for the update that sends to the client.
 
 	private GameDayService service;
 	private SimpMessagingTemplate messaging;
@@ -31,8 +36,8 @@ public class UpdatePublicationAspect {
 		
 		jp.proceed();
 
-		JsonNode diff = new JsonDiff().diff(original, updated);
-		messaging.convertAndSend("/topic/scores", diff);
+		Patch diff = new Diff().diff(original, updated);
+		messaging.convertAndSend("/topic/scores", new JsonPatchMaker().toJsonNode(diff));
 	}
 	
 }
