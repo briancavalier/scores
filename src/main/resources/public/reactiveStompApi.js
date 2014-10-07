@@ -5,7 +5,7 @@ var jiff = require('jiff');
 // rather than using callbacks.
 
 exports.connect = connect;
-exports.signalFromChannels = signalFromChannels;
+exports.getScoresStream = getScoresStream;
 
 // Promisify stomp connect()
 function connect(username, password, client) {
@@ -16,25 +16,34 @@ function connect(username, password, client) {
 	});
 }
 
-// Create a time-varying view of remote data using 2 channels
-// One that provides the complete, initial data set, and another
-// that provides incremental updates in JSON Patch format
-function signalFromChannels(initDestination, updateDestination, client) {
-
+function getScoresStream(initDestination, updateDestination, client) {
 	// Create a stream containing one full copy of the data, and
 	// flatMap that to a stream containing the time-varying
-	// current set of scores, using scan to accumulate each patch
-	// and emit the updated data.
-	return fromStompJson(initDestination, client)
-		.take(1)
+	// current set of scores, by accumulating each patch
+	// and emitting the updated scores data.
+	return getInitialDataStream(initDestination, client)
 		.flatMap(function(data) {
-			return fromStompJson(updateDestination, client)
-				.startWith([])
-				.scan(updateWithJsonPatch, data);
+			return getUpdatesStream(updateDestination, client, data);
 		});
 }
 
-function fromStompJson(destination, stomp) {
+function getInitialDataStream (initDestination, client) {
+	// Await a copy of the data from the STOMP subscription
+	// that is sending the full scores data, then unsubscribe.
+	return streamFromStompJson(initDestination, client)
+		.take(1);
+}
+
+function getUpdatesStream (updateDestination, client, data) {
+	// Incrementally accumulate patches from the STOMP subscription
+	// that is carrying JSON Patches onto the scores data to produce
+	// an updated view of the scores.
+	return streamFromStompJson(updateDestination, client)
+		.startWith([])
+		.scan(updateWithJsonPatch, data);
+}
+
+function streamFromStompJson(destination, stomp) {
 	return most.create(function(add) {
 		var sub = stomp.subscribe(destination, function(msg) {
 			add(JSON.parse(msg.body));

@@ -17,7 +17,7 @@ exports.main = function() {
 
 	// Create a time-varying signal view of the scores from the stomp connection
 	var scores = most.fromPromise(connection).flatMap(function(client) {
-		return reactiveStompApi.signalFromChannels('/app/scores', '/topic/scores', client);
+		return reactiveStompApi.getScoresStream('/app/scores', '/topic/scores', client);
 	});
 
 	// Create a Scoreboard, passing it the scores signal
