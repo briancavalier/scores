@@ -10,3 +10,4 @@ This is a simple football scores demo that uses Spring Sync to stream JSON Patch
 ## Run the app
 
 1. From the repo root dir: `gradlew bootRun`
+1. Once the app has booted up, open `http://localhost:8080` in a modern browser (one that supports WebSocket!)
