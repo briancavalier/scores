@@ -1,37 +1,28 @@
-<html>
-  <head>
+<html data-debug="">
+<head>
     <title>Home</title>
-    <script th:src="@{/webjars/sockjs-client/0.3.4/sockjs.min.js}"></script>
-    <script th:src="@{/webjars/stomp-websocket/2.3.0/stomp.min.js}"></script>
-    <script th:src="@{/webjars/jquery/2.0.3/jquery.min.js}"></script>
-  </head>
-  <body>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="main.css"/>
+    <script src="bower_components/rave/rave.js"></script>
+</head>
+<body>
 
-	<h2>Gameday Scores</h2>
+<section class="scoreboard">
+    <h2>Scoreboard</h2>
 
-    <script th:inline="javascript">
-      var sock = new SockJS([[@{/scores}]]);
-      var stomp = Stomp.over(sock);
+    <ul data-model="games">
+        <li class="game" data-list=""> <!-- thymeleaf parser fails without ="" -->
+            <div class="home">
+                <span class="name">{{homeTeam}}</span>
+                <span class="score">{{homeTeamScore}}</span>
+            </div>
+            <div class="away">
+                <span class="name">{{awayTeam}}</span>
+                <span class="score">{{awayTeamScore}}</span>
+            </div>
+        </li>
+    </ul>
+</section>
 
-      stomp.connect('guest', 'guest', function(frame) {
-        console.log('Connected to scores server');
-        stomp.subscribe("/app/scores", initialScores); // get the initial set of games/scores
-        stomp.subscribe("/topic/scores", updateScores); // subscribe to periodic updates
-      });
-      
-      function initialScores(message) {
-    	  console.log("Received initial scores: ", message);
-      }
-      
-      function updateScores(message) {
-        console.log('Received update to scores: ', message);
-      }
-      
-      function handleErrors(error) {
-        console.log('Error: ', error);
-      }
-      </script>
-    
-    <div id="output"></div>
-  </body>
+</body>
 </html>
