@@ -7,12 +7,10 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.patch.Diff;
 import org.springframework.patch.Patch;
 import org.springframework.patch.json.JsonPatchMaker;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
