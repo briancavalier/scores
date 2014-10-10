@@ -31,4 +31,4 @@ manifest.yml
 *.idea
 
 # Client Files
-/bower_components/
+bower_components/
