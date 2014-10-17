@@ -7,10 +7,10 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.patch.Diff;
-import org.springframework.patch.Patch;
-import org.springframework.patch.json.JsonPatchMaker;
 import org.springframework.stereotype.Component;
+import org.springframework.sync.Diff;
+import org.springframework.sync.Patch;
+import org.springframework.sync.json.JsonPatchMaker;
 
 @Aspect
 @Component
@@ -34,7 +34,7 @@ public class UpdatePublicationAspect {
 		
 		jp.proceed();
 
-		Patch diff = new Diff().diff(original, updated);
+		Patch diff = Diff.diff(original, updated);
 		messaging.convertAndSend("/topic/scores", new JsonPatchMaker().toJsonNode(diff));
 	}
 	
